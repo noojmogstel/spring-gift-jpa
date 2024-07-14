@@ -36,23 +36,12 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        Optional<Product> product = productRepository.findById(id);
-
-        if (product.isEmpty()) {
-            throw new DataNotFoundException("존재하지 않는 Product: Product를 찾을 수 없습니다.");
-        }
-        return product.get();
+        return findByProductByIdOrThrow(id);
     }
 
 
     public void updateProduct(Product product, Long id) {
-        Optional<Product> updateProduct = productRepository.findById(id);
-
-        if (updateProduct.isEmpty()) {
-            throw new DataNotFoundException("존재하지 않는 Product: Product를 Update할 수 없습니다.");
-        }
-
-        Product update = updateProduct.get();
+        Product update = findByProductByIdOrThrow(id);
         update.setName(product.getName());
         update.setPrice(product.getPrice());
         update.setImageUrl(product.getImageUrl());
@@ -67,12 +56,16 @@ public class ProductService {
     }
 
 
-
-    public Page<Product> getProductPage(int page){
+    public Page<Product> getProductPage(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.asc("id"));
-        Pageable pageable = PageRequest.of(page,PAGE_SIZE,Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(sorts));
         return productRepository.findAll(pageable);
+    }
+
+    private Product findByProductByIdOrThrow(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 상품입니다."));
     }
 
 }
