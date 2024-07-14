@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 import org.apache.juli.logging.Log;
-g
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +53,7 @@ public class WishlistController {
     @PostMapping
     public ResponseEntity<String> addWishlist(@RequestBody WishDTO wishDTO, @LoginUser String email) {
         Member member = memberService.findById(wishDTO.getMemberId());
-        Product product = productService.findById(wishDTO.getProductId());
+        Product product = productService.getProductById(wishDTO.getProductId());
         Wish wish = wishDTO.toEntity(member, product);
         wishlistService.addWishlist(wish, email);
         return new ResponseEntity<>("위시리스트 상품 추가 완료", HttpStatus.OK);

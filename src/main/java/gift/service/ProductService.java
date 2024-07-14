@@ -66,14 +66,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Product findById(Long id) {
-        Optional<Product> product = productRepository.findById(id);
 
-        if (product.isEmpty()) {
-            throw new DataNotFoundException("존재하지 않는 상품입니다.");
-        }
-        return product.get();
-    }
 
     public Page<Product> getProductPage(int page){
         List<Sort.Order> sorts = new ArrayList<>();
